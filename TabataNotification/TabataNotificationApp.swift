@@ -40,6 +40,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
  
         print("Notified")
         // アプリ起動時も通知を行う
-        completionHandler([.sound, .alert ])
+        completionHandler([.sound, .banner, .list ])
     }
 }
