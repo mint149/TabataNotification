@@ -63,6 +63,21 @@ struct ContentView: View {
                             default:
                                 print("unknown error")
                             }
+
+                            // 通知コンテンツの作成
+                            let content = UNMutableNotificationContent()
+                            content.title = statusText
+                            content.body = ""
+                            
+                            // 通知リクエストの作成
+                            let request = UNNotificationRequest.init(
+                                identifier: "TabataNotification",
+                                content: content,
+                                trigger: nil)
+
+                            // 通知リクエストの登録
+                            let center = UNUserNotificationCenter.current()
+                            center.add(request)
                         }
                     }
                     
