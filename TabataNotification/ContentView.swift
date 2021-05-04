@@ -12,6 +12,7 @@ struct ContentView: View {
         case Ready
         case Workout
         case Interval
+        case Finish
     }
 
     @State var timer : Timer!
@@ -33,26 +34,14 @@ struct ContentView: View {
             Spacer()
             if isTimerMoving {
                 Button(action: {
-                    // 変数初期化
-                    isTimerMoving = false
-                    time = 5
-                    setCount = 0
-                    statusText = "Ready..."
-                    statusCode = StatusCode.Ready
-                    timer?.invalidate()
+                    timerInit()
                 }) {
                     Text("Reset")
                         .fontWeight(.bold)
                 }
             } else {
                 Button(action: {
-                    // 変数初期化
-                    isTimerMoving = true
-                    time = 5
-                    setCount = 0
-                    statusText = "Ready..."
-                    statusCode = StatusCode.Ready
-                    timer?.invalidate()
+                    timerInit()
                     
                     // タイマー開始
                     timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true){ (tim) in
@@ -60,24 +49,19 @@ struct ContentView: View {
                         if time == 0 {
                             switch statusCode {
                             case .Ready:
-                                statusCode = .Workout
-                                statusText = "Workout"
-                                time = 20
+                                setStatus(targetStatus: .Workout)
                             case .Workout:
                                 setCount += 1
-                                statusCode = .Interval
-                                statusText = "Interval"
-                                time = 10
+                                setStatus(targetStatus: .Interval)
                             case .Interval:
                                 if setCount == 8 {
-                                    statusCode = .Ready
-                                    statusText = "Finish!"
+                                    setStatus(targetStatus: .Finish)
                                     timer?.invalidate()
                                 } else {
-                                    statusCode = .Workout
-                                    statusText = "Workout"
-                                    time = 20
+                                    setStatus(targetStatus: .Workout)
                                 }
+                            default:
+                                print("unknown error")
                             }
                         }
                     }
@@ -88,6 +72,31 @@ struct ContentView: View {
                 }
             }
             Spacer()
+        }
+    }
+    
+    func timerInit() -> Void {
+        isTimerMoving.toggle()
+        setStatus(targetStatus: .Ready)
+        setCount = 0
+        timer?.invalidate()
+    }
+    
+    func setStatus(targetStatus:StatusCode) -> Void {
+        statusCode = targetStatus
+        switch targetStatus {
+        case .Ready:
+            statusText = "Ready..."
+            time = 5
+        case .Workout:
+            statusText = "Workout"
+            time = 20
+        case .Interval:
+            statusText = "Interval"
+            time = 10
+        case .Finish:
+            statusText = "Finish!"
+            time = 0
         }
     }
 }
