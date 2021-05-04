@@ -54,6 +54,7 @@ struct ContentView: View {
                             time = 10
                         case .Interval:
                             if setCount == 8 {
+                                statusCode = .Ready
                                 statusText = "Finish!"
                                 timer?.invalidate()
                             } else {
