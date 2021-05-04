@@ -17,7 +17,7 @@ struct ContentView: View {
 
     @State var timer : Timer!
     @State var time = 5
-    @State var setCount = 0
+    @State var setCount = 1
     @State var statusText = "Ready..."
     @State var statusCode = StatusCode.Ready
     @State var isTimerMoving = false
@@ -51,13 +51,13 @@ struct ContentView: View {
                             case .Ready:
                                 setStatus(targetStatus: .Workout)
                             case .Workout:
-                                setCount += 1
                                 setStatus(targetStatus: .Interval)
                             case .Interval:
                                 if setCount == 8 {
                                     setStatus(targetStatus: .Finish)
                                     timer?.invalidate()
                                 } else {
+                                    setCount += 1
                                     setStatus(targetStatus: .Workout)
                                 }
                             default:
@@ -78,7 +78,7 @@ struct ContentView: View {
     func timerInit() -> Void {
         isTimerMoving.toggle()
         setStatus(targetStatus: .Ready)
-        setCount = 0
+        setCount = 1
         timer?.invalidate()
     }
     
@@ -89,10 +89,10 @@ struct ContentView: View {
             statusText = "Ready..."
             time = 5
         case .Workout:
-            statusText = "Workout"
+            statusText = "Workout : \(setCount)"
             time = 20
         case .Interval:
-            statusText = "Interval"
+            statusText = "Interval : \(setCount)"
             time = 10
         case .Finish:
             statusText = "Finish!"
